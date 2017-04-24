@@ -1,4 +1,5 @@
-(ns graphql-client.core
+(ns graphql-client.core-test
+  (:require [graphql-client.core :refer :all])
   (:use [clojure.test]))
 
 (deftest arg->str-test []
@@ -24,5 +25,6 @@
   (is (= "{q}" (query->str [[:q]])))
   (is (= "{q{a}}" (query->str [[:q :a]])))
   (is (= "{q{a b}}" (query->str [[:q :a :b]])))
-  (is (= "{q{a}}" (query->str [[:q :a]]))))
-
+  (is (= "{a1:q{a}}" (query->str [[{:a1 :q} :a]])))
+  (is (= "{q{a1:a{b}}}" (query->str [[:q [{:a1 :a} :b]]])))
+  (is (= "{Q{B}}" (query->str (fn [kw] ((comp (memfn toUpperCase) name) kw)) [[:q :b]]))))
